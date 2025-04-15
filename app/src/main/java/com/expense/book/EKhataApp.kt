@@ -1,4 +1,4 @@
-// EKhataApp.kt
+// ExpenseBookApp.kt
 package com.expense.book
 
 import androidx.compose.runtime.Composable
@@ -17,7 +17,7 @@ import com.expense.book.view.navigation.screen.SettingsScreen
 import com.expense.book.view.navigation.screen.SynchronizationScreen
 
 @Composable
-fun EKhataApp() {
+fun ExpenseBookApp() {
     val navController = rememberNavController()
     AppNavHost(navController = navController)
 }
@@ -25,7 +25,7 @@ fun EKhataApp() {
 @Composable
 fun AppNavHost(navController: NavHostController) {
 
-    //TODO: Replace startDestination with Screen.Login.route
+    /*TODO Replace startDestination with Screen.Login.route*/
 
     NavHost(navController, startDestination = Screen.Dashboard.route) {
         composable(Screen.Login.route) {
@@ -62,6 +62,6 @@ fun AppNavHost(navController: NavHostController) {
 @Composable
 fun AppPreview(){
     ExpenseBookTheme {
-        EKhataApp()
+        ExpenseBookApp()
     }
 }

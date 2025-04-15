@@ -1,17 +1,12 @@
 package com.expense.book.view.navigation.screen.dashboard
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -121,19 +116,19 @@ fun DashboardScreen(
                 )
             }
         },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = selectedItem == DashboardNavItem.Dashboard,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                FloatingActionButton(
-                    onClick = onAddTransaction,
-                ) {
-                    Icon(Icons.Filled.Add, stringResource(R.string.add_transaction))
-                }
-            }
-        }
+//        floatingActionButton = {
+//            AnimatedVisibility(
+//                visible = selectedItem == DashboardNavItem.Dashboard,
+//                enter = fadeIn(),
+//                exit = fadeOut()
+//            ) {
+//                FloatingActionButton(
+//                    onClick = onAddTransaction,
+//                ) {
+//                    Icon(Icons.Filled.Add, stringResource(R.string.add_transaction))
+//                }
+//            }
+//        }
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -141,7 +136,7 @@ fun DashboardScreen(
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(DashboardNavItem.Dashboard.route) {
-                DashboardMainScreen()
+                DashboardMainScreen(onAddTransaction)
             }
             composable(DashboardNavItem.Analysis.route) {
                 AnalysisScreen(onBack = {

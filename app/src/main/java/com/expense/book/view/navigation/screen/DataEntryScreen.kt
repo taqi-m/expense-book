@@ -66,7 +66,8 @@ fun DataEntryScreenContent(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                    } },
+                    }
+                },
                 actions = {
                     IconButton(
                         onClick = {
@@ -76,7 +77,7 @@ fun DataEntryScreenContent(
                         }
                     ) {
                         Icon(Icons.Filled.Check, contentDescription = "Done")
-                }
+                    }
                 }
             )
         }
@@ -90,10 +91,10 @@ fun DataEntryScreenContent(
                 .navigationBarsPadding()
         ) {
 
-            Box(modifier = Modifier.fillMaxWidth()){
+            Box(modifier = Modifier.fillMaxWidth()) {
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = {expanded = !expanded}
+                    onExpandedChange = { expanded = !expanded }
                 ) {
                     OutlinedTextField(
                         value = selectedType?.categoryName ?: "Select Type",
@@ -101,14 +102,16 @@ fun DataEntryScreenContent(
                         readOnly = true,
                         label = { Text("Type") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
+                        modifier = Modifier
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                            .fillMaxWidth(),
                     )
 
                     ExposedDropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        allTypes.forEach{ type ->
+                        allTypes.forEach { type ->
                             androidx.compose.material3.DropdownMenuItem(
                                 text = {
                                     Text(text = type.categoryName)
@@ -123,7 +126,7 @@ fun DataEntryScreenContent(
                 }
             }
 
-           Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Income Input Fields
             if (selectedType?.type == "Income") {
@@ -131,7 +134,7 @@ fun DataEntryScreenContent(
                     value = buyerName,
                     onValueChange = { viewModel.updateBuyerName(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = {Text(text = "Buyer Name")}
+                    label = { Text(text = "Buyer Name") }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -140,7 +143,7 @@ fun DataEntryScreenContent(
                     value = quantity,
                     onValueChange = { viewModel.updateQuantity(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = {Text(text = "Quantity")}
+                    label = { Text(text = "Quantity") }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -148,7 +151,7 @@ fun DataEntryScreenContent(
                 OutlinedTextField(
                     value = price,
                     onValueChange = { viewModel.updatePrice(it) },
-                    modifier = Modifier.fillMaxWidth(), label = {Text(text = "Price")}
+                    modifier = Modifier.fillMaxWidth(), label = { Text(text = "Price") }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -159,7 +162,7 @@ fun DataEntryScreenContent(
                     value = amount,
                     onValueChange = { viewModel.updateAmount(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = {Text(text = "Amount")}
+                    label = { Text(text = "Amount") }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -168,7 +171,7 @@ fun DataEntryScreenContent(
                     value = description,
                     onValueChange = { viewModel.updateDescription(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = {Text(text = "Description")}
+                    label = { Text(text = "Description") }
                 )
 
             }

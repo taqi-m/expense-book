@@ -34,6 +34,7 @@ fun IncomeItem(income: Income, modifier: Modifier = Modifier) {
         )
     }
 }
+
 @Preview
 @Composable
 fun TransactionItemPreview() {

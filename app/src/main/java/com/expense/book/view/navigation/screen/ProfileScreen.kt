@@ -29,7 +29,11 @@ fun ProfileScreen(onBack: () -> Unit) {
             )
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
             Text("Profile Screen Content")
         }
     }
