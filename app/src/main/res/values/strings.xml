@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Expense Book</string>
+    <string name="sync_data">Sync Data</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="analysis">Analysis</string>
+    <string name="categories">Categories</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="currencyPrefix">"Rs. "</string>
+
+    <string-array name="record_types">
+        <item>Income</item>
+        <item>Expense</item>
+    </string-array>
+</resources>
