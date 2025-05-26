@@ -1,5 +1,9 @@
 package com.expense.book.view.navigation.screen.dashboard
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -27,6 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.expense.book.R
+import com.expense.book.view.navigation.Screen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.AnalysisScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.CategoriesScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.DashboardMainScreen
@@ -116,24 +121,11 @@ fun DashboardScreen(
                 )
             }
         },
-//        floatingActionButton = {
-//            AnimatedVisibility(
-//                visible = selectedItem == DashboardNavItem.Dashboard,
-//                enter = fadeIn(),
-//                exit = fadeOut()
-//            ) {
-//                FloatingActionButton(
-//                    onClick = onAddTransaction,
-//                ) {
-//                    Icon(Icons.Filled.Add, stringResource(R.string.add_transaction))
-//                }
-//            }
-//        }
     ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = DashboardNavItem.Dashboard.route,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
         ) {
             composable(DashboardNavItem.Dashboard.route) {
                 DashboardMainScreen(onAddTransaction)

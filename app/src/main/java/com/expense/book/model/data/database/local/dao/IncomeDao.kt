@@ -14,6 +14,7 @@ interface IncomeDao {
     @Query("SELECT * FROM income ORDER BY date DESC")
     fun getAllIncome(): Flow<List<Income>>
 
-    @Query("SELECT * FROM income WHERE categoryId = :typeId ORDER BY date DESC")
-    fun getIncomeByType(typeId: Long): Flow<List<Income>>
+    @Query("SELECT * FROM income WHERE accountId = :accountId")
+    fun getIncomeByAccount(accountId: Long): Flow<List<Income>>
+
 }

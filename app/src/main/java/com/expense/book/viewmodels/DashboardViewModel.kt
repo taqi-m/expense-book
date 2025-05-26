@@ -3,7 +3,7 @@ package com.expense.book.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.expense.book.model.data.database.DataRepository
-import com.expense.book.model.data.database.local.entities.Category
+import com.expense.book.model.data.database.local.entities.ExpenseCategory
 import com.expense.book.model.data.database.local.entities.Expense
 import com.expense.book.model.data.database.local.entities.Income
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +27,8 @@ class DashboardViewModel @Inject constructor(
     val recentExpenses: StateFlow<List<Expense>> = _recentExpenses
 
     // StateFlow for all types (for filtering or display purposes)
-    private val _allTypes = MutableStateFlow<List<Category>>(emptyList())
-    val allTypes: StateFlow<List<Category>> = _allTypes
+    private val _allTypes = MutableStateFlow<List<ExpenseCategory>>(emptyList())
+    val allTypes: StateFlow<List<ExpenseCategory>> = _allTypes
 
     // StateFlow for total income
     private val _totalIncome = MutableStateFlow(0.0)
@@ -81,7 +81,7 @@ class DashboardViewModel @Inject constructor(
     private fun calculateTotalIncome() {
         viewModelScope.launch {
             repository.getAllIncome().collect { incomeList ->
-                _totalIncome.value = incomeList.sumOf { it.price }
+                _totalIncome.value = incomeList.sumOf { it.amount }
             }
         }
     }
@@ -116,9 +116,9 @@ class DashboardViewModel @Inject constructor(
     }
 
     // Insert a new type
-    fun insertType(category: Category) {
+    fun insertType(expenseCategory: ExpenseCategory) {
         viewModelScope.launch {
-            repository.insertType(category)
+            repository.insertType(expenseCategory)
             // Refresh the types list
             loadAllTypes()
         }

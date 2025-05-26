@@ -5,7 +5,8 @@ import androidx.room.Room
 import com.expense.book.model.data.AppPreferences
 import com.expense.book.model.data.database.DataRepository
 import com.expense.book.model.data.database.local.AppDatabase
-import com.expense.book.model.data.database.local.dao.CategoryDao
+import com.expense.book.model.data.database.local.dao.AccountDao
+import com.expense.book.model.data.database.local.dao.ExpenseCategoryDao
 import com.expense.book.model.data.database.local.dao.ExpenseDao
 import com.expense.book.model.data.database.local.dao.IncomeDao
 import dagger.Module
@@ -24,12 +25,20 @@ object AppModule {
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context, AppDatabase::class.java, "expense_tracking_db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideCategoryDao(database: AppDatabase): CategoryDao {
+    fun provideAccountDao(database: AppDatabase): AccountDao {
+        return database.accountDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryDao(database: AppDatabase): ExpenseCategoryDao {
         return database.categoryDao()
     }
 
@@ -54,11 +63,18 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDataRepository(
-        categoryDao: CategoryDao,
+        accountDao: AccountDao,
+        expenseCategoryDao: ExpenseCategoryDao,
         incomeDao: IncomeDao,
         expenseDao: ExpenseDao,
         appPreferences: AppPreferences
     ): DataRepository {
-        return DataRepository(categoryDao, incomeDao, expenseDao, appPreferences)
+        return DataRepository(
+            accountDao,
+            expenseCategoryDao,
+            incomeDao,
+            expenseDao,
+            appPreferences
+        )
     }
 }

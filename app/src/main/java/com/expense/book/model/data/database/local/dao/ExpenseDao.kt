@@ -14,6 +14,6 @@ interface ExpenseDao {
     @Query("SELECT * FROM expense ORDER BY date DESC")
     fun getAllExpenses(): Flow<List<Expense>>
 
-    @Query("SELECT * FROM expense WHERE categoryId = :typeId ORDER BY date DESC")
-    fun getExpensesByType(typeId: Long): Flow<List<Expense>>
+    @Query("SELECT * FROM expense WHERE categoryId = :categoryId ORDER BY date DESC")
+    fun getExpensesByCategory(categoryId: Long): Flow<List<Expense>>
 }

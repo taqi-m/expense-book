@@ -2,17 +2,20 @@ package com.expense.book.model.data.database
 
 import android.util.Log
 import com.expense.book.model.data.AppPreferences
-import com.expense.book.model.data.database.local.dao.CategoryDao
+import com.expense.book.model.data.database.local.dao.AccountDao
+import com.expense.book.model.data.database.local.dao.ExpenseCategoryDao
 import com.expense.book.model.data.database.local.dao.ExpenseDao
 import com.expense.book.model.data.database.local.dao.IncomeDao
-import com.expense.book.model.data.database.local.entities.Category
+import com.expense.book.model.data.database.local.entities.Account
 import com.expense.book.model.data.database.local.entities.Expense
+import com.expense.book.model.data.database.local.entities.ExpenseCategory
 import com.expense.book.model.data.database.local.entities.Income
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DataRepository @Inject constructor(
-    private val categoryDao: CategoryDao,
+    private val accountDao: AccountDao,
+    private val expenseCategoryDao: ExpenseCategoryDao,
     private val incomeDao: IncomeDao,
     private val expenseDao: ExpenseDao,
     private val appPreferences: AppPreferences
@@ -24,56 +27,56 @@ class DataRepository @Inject constructor(
             return
         }
 
-       val defaultCategories = listOf(
-            Category(categoryName = "Salary", type = "Income"),
-            Category(categoryName = "Freelance", type = "Income"),
-            Category(categoryName = "Investments", type = "Income"),
-            Category(categoryName = "Gifts", type = "Income"),
-
-            Category(categoryName = "Groceries", type = "Expense"),
-            Category(categoryName = "Rent", type = "Expense"),
-            Category(categoryName = "Utilities", type = "Expense"),
-            Category(categoryName = "Transportation", type = "Expense"),
-            Category(categoryName = "Food", type = "Expense"),
-            Category(categoryName = "Entertainment", type = "Expense"),
-            Category(categoryName = "Shopping", type = "Expense"),
-            Category(categoryName = "Healthcare", type = "Expense"),
-            Category(categoryName = "Education", type = "Expense")
+        val defaultExpenseCategories = listOf(
+            ExpenseCategory(categoryName = "Groceries"),
+            ExpenseCategory(categoryName = "Rent"),
+            ExpenseCategory(categoryName = "Utilities"),
+            ExpenseCategory(categoryName = "Transportation"),
+            ExpenseCategory(categoryName = "Food"),
+            ExpenseCategory(categoryName = "Entertainment"),
+            ExpenseCategory(categoryName = "Shopping"),
+            ExpenseCategory(categoryName = "Healthcare"),
+            ExpenseCategory(categoryName = "Education")
 
         )
 
-//        val defaultCategories = listOf(
-//            Category(typeName = "Income", type = "Income"),
-//            Category(typeName = "Expense", type = "Expense")
-//        )
+        val defaultAccounts = listOf(
+            Account(accountName = "Cash", description = "Cash Amount"),
+            Account(accountName = "Card", description = "Credit Card"),
+            Account(accountName = "Savings", description = "SavingS Fund"),
+        )
 
-
-
-
-
-
-        for (category in defaultCategories) {
-            val existingType = categoryDao.getCategoryByNameAndType(category.categoryName, category.type)
-            if (existingType == null) {
-                categoryDao.insert(category)
+        try {
+            for (category in defaultExpenseCategories) {
+                val existingType = expenseCategoryDao.getCategoryByName(category.categoryName)
+                if (existingType == null) {
+                    expenseCategoryDao.insert(category)
+                }
             }
+
+            for (account in defaultAccounts) {
+                val existingAccount = accountDao.getAccountByName(account.accountName)
+                if (existingAccount == null) {
+                    accountDao.insert(account)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("DataRepository", "Error adding default types: ${e.message}")
+        } finally {
+            // Mark default types as added
+            appPreferences.setDefaultTypesAdded()
         }
 
-        // Mark default types as added
-        appPreferences.setDefaultTypesAdded()
+
     }
 
     // Type Operations
-    suspend fun insertType(category: Category) {
-        categoryDao.insert(category)
+    suspend fun insertType(expenseCategory: ExpenseCategory) {
+        expenseCategoryDao.insert(expenseCategory)
     }
 
-    fun getTypesByCategory(category: String): Flow<List<Category>> {
-        return categoryDao.getCategoriesByType(category)
-    }
-
-    fun getAllTypes(): Flow<List<Category>> {
-        return categoryDao.getAllTypes()
+    fun getAllTypes(): Flow<List<ExpenseCategory>> {
+        return expenseCategoryDao.getAllTypes()
     }
 
     // Income Operations
@@ -81,12 +84,12 @@ class DataRepository @Inject constructor(
         incomeDao.insert(income)
     }
 
-    fun getAllIncome(): Flow<List<Income>> {
+    suspend fun getAllIncome(): Flow<List<Income>> {
         return incomeDao.getAllIncome()
     }
 
-    fun getIncomeByType(typeId: Long): Flow<List<Income>> {
-        return incomeDao.getIncomeByType(typeId)
+    suspend fun getIncomeByAccount(accountId: Long): Flow<List<Income>> {
+        return incomeDao.getIncomeByAccount(accountId)
     }
 
     // Expense Operations
@@ -99,6 +102,10 @@ class DataRepository @Inject constructor(
     }
 
     fun getExpensesByType(typeId: Long): Flow<List<Expense>> {
-        return expenseDao.getExpensesByType(typeId)
+        return expenseDao.getExpensesByCategory(typeId)
+    }
+
+    suspend fun getAllAccounts(): Flow<List<Account>> {
+        return accountDao.getAllAccounts()
     }
 }

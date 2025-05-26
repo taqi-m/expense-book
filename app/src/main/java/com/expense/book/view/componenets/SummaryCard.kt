@@ -30,8 +30,8 @@ fun SummaryCard(title: String, value: Double, modifier: Modifier = Modifier) {
 
             )
         Text(
-            text = if (value % 1 == 0.0) value.toInt()
-                .toString() else value.toString(),
+            text = (if (value % 1 == 0.0) value.toInt()
+                .toString() else value.toString()) + " Rs.",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.End
         )

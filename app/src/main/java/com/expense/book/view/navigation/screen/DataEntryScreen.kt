@@ -32,7 +32,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.expense.book.view.componenets.TextToggleSwitch
 import com.expense.book.viewmodels.DataEntryViewModel
+import com.google.android.material.chip.ChipGroup
 
 @Composable
 fun DataEntryScreen(
@@ -50,7 +52,8 @@ fun DataEntryScreenContent(
 ) {
     // Collect StateFlow values from the ViewModel
     val allTypes by viewModel.allTypes.collectAsState()
-    val selectedType by viewModel.selectedCategory.collectAsState()
+//    val selectedType by viewModel.selectedExpenseCategory.collectAsState()
+    val selectedType by viewModel.selectedEntryType.collectAsState()
     val buyerName by viewModel.buyerName.collectAsState()
     val quantity by viewModel.quantity.collectAsState()
     val price by viewModel.price.collectAsState()
@@ -71,8 +74,9 @@ fun DataEntryScreenContent(
                 actions = {
                     IconButton(
                         onClick = {
-                            if (selectedType?.type == "Expense") viewModel.insertExpense()
-                            else if (selectedType?.type == "Income") viewModel.insertIncome()
+                            //TODO: Implement save logic
+//                            if (selectedType?.type == "Expense") viewModel.insertExpense()
+//                            else if (selectedType?.type == "Income") viewModel.insertIncome()
                             onBack()
                         }
                     ) {
@@ -83,6 +87,29 @@ fun DataEntryScreenContent(
         }
     ) { paddingValues ->
         Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .navigationBarsPadding()
+        ){
+            TextToggleSwitch(
+                firstOption = "Income",
+                secondOption = "Expense",
+                isFirstSelected = selectedType == DataEntryViewModel.ENTRY_TYPE.INCOME,
+                onToggle = { isFirstSelected ->
+                    viewModel.updateSelectedEntryType(
+                        if (isFirstSelected) DataEntryViewModel.ENTRY_TYPE.INCOME
+                        else DataEntryViewModel.ENTRY_TYPE.EXPENSE
+                    )
+                }
+            )
+        }
+
+
+
+/*        Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(16.dp)
@@ -175,6 +202,6 @@ fun DataEntryScreenContent(
                 )
 
             }
-        }
+        }*/
     }
 }

@@ -3,11 +3,10 @@ package com.expense.book.model.data.database.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "income")
-data class Income(
+@Entity(tableName = "account")
+data class Account(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val accountId : Long, // Foreign key to Accounts table
-    val amount: Double,
+    val accountName: String,
     val description: String? = null,
-    val date: Long // Timestamp for the transaction
+    val currentBalance: Double = 0.0
 )

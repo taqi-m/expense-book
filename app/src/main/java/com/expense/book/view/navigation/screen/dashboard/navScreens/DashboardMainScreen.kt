@@ -33,8 +33,8 @@ import com.expense.book.viewmodels.DashboardViewModel
 @Composable
 fun DashboardMainScreen(
     onAddTransaction: () -> Unit,
-    viewModel: DashboardViewModel = hiltViewModel()
 ) {
+    val viewModel: DashboardViewModel = hiltViewModel()
     val recentIncomes by viewModel.recentIncome.collectAsState()
     val recentExpenses by viewModel.recentExpenses.collectAsState()
     val totalIncome by viewModel.totalIncome.collectAsState()
@@ -51,8 +51,8 @@ fun DashboardMainScreen(
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+                .fillMaxSize(),
+            contentPadding = paddingValues
         ) {
             item {
                 Card(
@@ -63,6 +63,7 @@ fun DashboardMainScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .clickable {  }
                             .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
@@ -76,6 +77,7 @@ fun DashboardMainScreen(
             // Section 2: Recent Incomes
             item {
                 SectionHeader(
+                    modifier = Modifier.padding(top = 16.dp),
                     title = stringArrayResource(R.array.record_types)[0],
                     showViewAll = recentIncomes.size > 4,
                     onViewAllClick = { /*TODO*/ }
@@ -85,7 +87,6 @@ fun DashboardMainScreen(
                 IncomeItem(
                     income = income,
                     modifier = Modifier
-                        .clickable { }
                         .padding(horizontal = 4.dp)
                 )
             }
@@ -93,6 +94,7 @@ fun DashboardMainScreen(
             // Section 3: Recent Expenses
             item {
                 SectionHeader(
+                    modifier = Modifier.padding(top = 16.dp),
                     title = stringArrayResource(R.array.record_types)[1],
                     showViewAll = recentExpenses.size > 4,
                     onViewAllClick = { /*TODO*/ }
@@ -102,7 +104,6 @@ fun DashboardMainScreen(
                 ExpenseItem(
                     expense = expense,
                     modifier = Modifier
-                        .clickable { }
                         .padding(horizontal = 4.dp)
                 )
             }

@@ -1,6 +1,8 @@
 // ExpenseBookApp.kt
 package com.expense.book
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -27,7 +29,14 @@ fun AppNavHost(navController: NavHostController) {
 
     /*TODO Replace startDestination with Screen.Login.route*/
 
-    NavHost(navController, startDestination = Screen.Dashboard.route) {
+    NavHost(
+        navController,
+        startDestination = Screen.Dashboard.route,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None }
+    ) {
         composable(Screen.Login.route) {
             LoginScreen(onLoginSuccess = {
                 navController.navigate(Screen.Dashboard.route) {

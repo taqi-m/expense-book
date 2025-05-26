@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class Expense(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val categoryId: Long, // Foreign key to Type table
+    val accountId: Long, // Foreign key to Accounts table
     val amount: Double,
-    val description: String,
+    val description: String? = null,
     val date: Long // Timestamp for the transaction
 )

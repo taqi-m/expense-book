@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.expense.book.model.data.database.DataRepository
-import com.expense.book.model.data.database.local.entities.Category
+import com.expense.book.model.data.database.local.entities.Account
+import com.expense.book.model.data.database.local.entities.ExpenseCategory
 import com.expense.book.model.data.database.local.entities.Expense
 import com.expense.book.model.data.database.local.entities.Income
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +19,27 @@ class DataEntryViewModel @Inject constructor(
     private val repository: DataRepository
 ) : ViewModel() {
 
+    enum class ENTRY_TYPE {
+        INCOME,
+        EXPENSE
+    }
+
     // StateFlow for all types (for the TypeSpinner)
-    private val _allTypes = MutableStateFlow<List<Category>>(emptyList())
-    val allTypes: StateFlow<List<Category>> = _allTypes
+    private val _allTypes = MutableStateFlow<List<ExpenseCategory>>(emptyList())
+    val allTypes: StateFlow<List<ExpenseCategory>> = _allTypes
+
+    private val _allAccounts = MutableStateFlow<List<Account>>(emptyList())
+    val allAccounts: StateFlow<List<Account>> = _allAccounts
+
+    private val _currentAccount = MutableStateFlow<Account?>(null)
+    val currentAccount: StateFlow<Account?> = _currentAccount
 
     // MutableState for selected type
-    private val _selectedCategory = MutableStateFlow<Category?>(null)
-    val selectedCategory: StateFlow<Category?> = _selectedCategory
+    private val _selectedExpenseCategory = MutableStateFlow<ExpenseCategory?>(null)
+    val selectedExpenseCategory: StateFlow<ExpenseCategory?> = _selectedExpenseCategory
+
+    private val _selectedEntryType = MutableStateFlow(ENTRY_TYPE.INCOME)
+    val selectedEntryType: StateFlow<ENTRY_TYPE> = _selectedEntryType
 
     // MutableState for input fields
     private val _buyerName = MutableStateFlow("")
@@ -55,15 +70,28 @@ class DataEntryViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getAllTypes().collect { types ->
                 _allTypes.value = types
-                _selectedCategory.value = _allTypes.value.firstOrNull()
+                _selectedExpenseCategory.value = _allTypes.value.firstOrNull()
                 Log.d("DataRepository", "All types: $types")
+            }
+            repository.getAllAccounts().collect { accounts ->
+                _allAccounts.value = accounts
+                _currentAccount.value = _allAccounts.value.firstOrNull()
+                Log.d("DataRepository", "All accounts: $accounts")
             }
         }
     }
 
     // Update selected type
-    fun updateSelectedType(category: Category) {
-        _selectedCategory.value = category
+    fun updateSelectedType(expenseCategory: ExpenseCategory) {
+        _selectedExpenseCategory.value = expenseCategory
+    }
+
+    // Update selected entry type
+    fun updateSelectedEntryType(entryType: ENTRY_TYPE) {
+        _selectedEntryType.value = entryType
+        Log.i("DataEntryViewModel", "Selected entry type: $entryType")
+        // Clear inputs when switching types
+        clearInputs()
     }
 
     // Update buyer name
@@ -95,10 +123,9 @@ class DataEntryViewModel @Inject constructor(
     fun insertIncome() {
         viewModelScope.launch {
             val income = Income(
-                categoryId = _selectedCategory.value?.id ?: 0,
-                buyerName = _buyerName.value,
-                quantity = _quantity.value.toDoubleOrNull() ?: 0.0,
-                price = _price.value.toDoubleOrNull() ?: 0.0,
+                accountId = _currentAccount.value?.id ?: 0,
+                amount = _quantity.value.toDoubleOrNull() ?: 0.0,
+                description = _description.value,
                 date = System.currentTimeMillis()
             )
             repository.insertIncome(income)
@@ -110,7 +137,8 @@ class DataEntryViewModel @Inject constructor(
     fun insertExpense() {
         viewModelScope.launch {
             val expense = Expense(
-                categoryId = _selectedCategory.value?.id ?: 0,
+                categoryId = _selectedExpenseCategory.value?.id ?: 0,
+                accountId = _currentAccount.value?.id ?: 0,
                 amount = _amount.value.toDoubleOrNull() ?: 0.0,
                 description = _description.value,
                 date = System.currentTimeMillis()
@@ -127,6 +155,6 @@ class DataEntryViewModel @Inject constructor(
         _price.value = ""
         _amount.value = ""
         _description.value = ""
-        _selectedCategory.value = null
+        _selectedExpenseCategory.value = null
     }
 }
