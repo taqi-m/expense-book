@@ -13,10 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.expense.book.model.data.database.local.entities.Income
-import com.expense.book.ui.theme.ExpenseBookTheme
 
 @Composable
 fun IncomeItem(income: Income, modifier: Modifier = Modifier) {
@@ -36,22 +34,3 @@ fun IncomeItem(income: Income, modifier: Modifier = Modifier) {
         )
     }
 }
-//
-//@Preview
-//@Composable
-//fun TransactionItemPreview() {
-//    ExpenseBookTheme {
-//        IncomeItem(
-//            income = Income(
-//                id = 1,
-//                categoryId = 1,
-//                buyerName = "John Doe",
-//                amount = 1.0,
-//                price = 100.0,
-//                date = System.currentTimeMillis()
-//            )
-//        )
-//    }
-//
-//}
-

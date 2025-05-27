@@ -1,8 +1,6 @@
 // ExpenseBookApp.kt
 package com.expense.book
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -11,12 +9,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.expense.book.ui.theme.ExpenseBookTheme
 import com.expense.book.view.navigation.Screen
-import com.expense.book.view.navigation.screen.dashboard.DashboardScreen
 import com.expense.book.view.navigation.screen.DataEntryScreen
 import com.expense.book.view.navigation.screen.LoginScreen
 import com.expense.book.view.navigation.screen.ProfileScreen
 import com.expense.book.view.navigation.screen.SettingsScreen
 import com.expense.book.view.navigation.screen.SynchronizationScreen
+import com.expense.book.view.navigation.screen.dashboard.DashboardScreen
 
 @Composable
 fun ExpenseBookApp() {
@@ -26,16 +24,15 @@ fun ExpenseBookApp() {
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
-
     /*TODO Replace startDestination with Screen.Login.route*/
 
     NavHost(
         navController,
         startDestination = Screen.Dashboard.route,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
-        popExitTransition = { ExitTransition.None }
+//        enterTransition = { EnterTransition.None },
+//        exitTransition = { ExitTransition.None },
+//        popEnterTransition = { EnterTransition.None },
+//        popExitTransition = { ExitTransition.None }
     ) {
         composable(Screen.Login.route) {
             LoginScreen(onLoginSuccess = {
@@ -46,10 +43,23 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable(Screen.Dashboard.route) {
             DashboardScreen(
-                onNavigateToProfile = { navController.navigate(Screen.Profile.route) },
-                onAddTransaction = { navController.navigate(Screen.DataEntry.route) },
-                onSyncData = { navController.navigate(Screen.Sync.route) },
-                onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
+                onNavigateToProfile = { 
+                    // Save the dashboard state in the navigation backstack
+                    navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
+                    navController.navigate(Screen.Profile.route) 
+                },
+                onAddTransaction = { 
+                    navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
+                    navController.navigate(Screen.DataEntry.route) 
+                },
+                onSyncData = { 
+                    navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
+                    navController.navigate(Screen.Sync.route) 
+                },
+                onNavigateToSettings = { 
+                    navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
+                    navController.navigate(Screen.Settings.route) 
+                }
             )
         }
         composable(Screen.DataEntry.route) {
