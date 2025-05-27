@@ -3,19 +3,19 @@ package com.expense.book.model.data.database
 import android.util.Log
 import com.expense.book.model.data.AppPreferences
 import com.expense.book.model.data.database.local.dao.AccountDao
-import com.expense.book.model.data.database.local.dao.ExpenseCategoryDao
+import com.expense.book.model.data.database.local.dao.CategoryDao
 import com.expense.book.model.data.database.local.dao.ExpenseDao
 import com.expense.book.model.data.database.local.dao.IncomeDao
 import com.expense.book.model.data.database.local.entities.Account
+import com.expense.book.model.data.database.local.entities.Category
 import com.expense.book.model.data.database.local.entities.Expense
-import com.expense.book.model.data.database.local.entities.ExpenseCategory
 import com.expense.book.model.data.database.local.entities.Income
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DataRepository @Inject constructor(
     private val accountDao: AccountDao,
-    private val expenseCategoryDao: ExpenseCategoryDao,
+    private val categoryDao: CategoryDao,
     private val incomeDao: IncomeDao,
     private val expenseDao: ExpenseDao,
     private val appPreferences: AppPreferences
@@ -27,16 +27,24 @@ class DataRepository @Inject constructor(
             return
         }
 
-        val defaultExpenseCategories = listOf(
-            ExpenseCategory(categoryName = "Groceries"),
-            ExpenseCategory(categoryName = "Rent"),
-            ExpenseCategory(categoryName = "Utilities"),
-            ExpenseCategory(categoryName = "Transportation"),
-            ExpenseCategory(categoryName = "Food"),
-            ExpenseCategory(categoryName = "Entertainment"),
-            ExpenseCategory(categoryName = "Shopping"),
-            ExpenseCategory(categoryName = "Healthcare"),
-            ExpenseCategory(categoryName = "Education")
+        val defaultCategories = listOf(
+            Category(categoryName = "Groceries", categoryType = "Expense"),
+            Category(categoryName = "Rent", categoryType = "Expense"),
+            Category(categoryName = "Utilities", categoryType = "Expense"),
+            Category(categoryName = "Transportation", categoryType = "Expense"),
+            Category(categoryName = "Food", categoryType = "Expense"),
+            Category(categoryName = "Entertainment", categoryType = "Expense"),
+            Category(categoryName = "Shopping", categoryType = "Expense"),
+            Category(categoryName = "Healthcare", categoryType = "Expense"),
+            Category(categoryName = "Education", categoryType = "Expense"),
+
+            Category(categoryName = "Salary", categoryType = "Income"),
+            Category(categoryName = "Business", categoryType = "Income"),
+            Category(categoryName = "Investment", categoryType = "Income"),
+            Category(categoryName = "Freelance", categoryType = "Income"),
+            Category(categoryName = "Gift", categoryType = "Income"),
+            Category(categoryName = "Other", categoryType = "Income")
+
 
         )
 
@@ -47,10 +55,10 @@ class DataRepository @Inject constructor(
         )
 
         try {
-            for (category in defaultExpenseCategories) {
-                val existingType = expenseCategoryDao.getCategoryByName(category.categoryName)
+            for (category in defaultCategories) {
+                val existingType = categoryDao.getCategoryByNameAndType(category.categoryName, category.categoryType)
                 if (existingType == null) {
-                    expenseCategoryDao.insert(category)
+                    categoryDao.insert(category)
                 }
             }
 
@@ -71,12 +79,12 @@ class DataRepository @Inject constructor(
     }
 
     // Type Operations
-    suspend fun insertType(expenseCategory: ExpenseCategory) {
-        expenseCategoryDao.insert(expenseCategory)
+    suspend fun insertType(category: Category) {
+        categoryDao.insert(category)
     }
 
-    fun getAllTypes(): Flow<List<ExpenseCategory>> {
-        return expenseCategoryDao.getAllTypes()
+    fun getAllTypes(): Flow<List<Category>> {
+        return categoryDao.getAllCategories()
     }
 
     // Income Operations
@@ -84,11 +92,11 @@ class DataRepository @Inject constructor(
         incomeDao.insert(income)
     }
 
-    suspend fun getAllIncome(): Flow<List<Income>> {
+    fun getAllIncome(): Flow<List<Income>> {
         return incomeDao.getAllIncome()
     }
 
-    suspend fun getIncomeByAccount(accountId: Long): Flow<List<Income>> {
+    fun getIncomeByAccount(accountId: Long): Flow<List<Income>> {
         return incomeDao.getIncomeByAccount(accountId)
     }
 

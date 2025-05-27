@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.expense.book.model.data.database.DataRepository
 import com.expense.book.model.data.database.local.entities.Account
-import com.expense.book.model.data.database.local.entities.ExpenseCategory
+import com.expense.book.model.data.database.local.entities.Category
 import com.expense.book.model.data.database.local.entities.Expense
 import com.expense.book.model.data.database.local.entities.Income
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +25,8 @@ class DataEntryViewModel @Inject constructor(
     }
 
     // StateFlow for all types (for the TypeSpinner)
-    private val _allTypes = MutableStateFlow<List<ExpenseCategory>>(emptyList())
-    val allTypes: StateFlow<List<ExpenseCategory>> = _allTypes
+    private val _allTypes = MutableStateFlow<List<Category>>(emptyList())
+    val allTypes: StateFlow<List<Category>> = _allTypes
 
     private val _allAccounts = MutableStateFlow<List<Account>>(emptyList())
     val allAccounts: StateFlow<List<Account>> = _allAccounts
@@ -35,8 +35,8 @@ class DataEntryViewModel @Inject constructor(
     val currentAccount: StateFlow<Account?> = _currentAccount
 
     // MutableState for selected type
-    private val _selectedExpenseCategory = MutableStateFlow<ExpenseCategory?>(null)
-    val selectedExpenseCategory: StateFlow<ExpenseCategory?> = _selectedExpenseCategory
+    private val _selectedCategory = MutableStateFlow<Category?>(null)
+    val selectedCategory: StateFlow<Category?> = _selectedCategory
 
     private val _selectedEntryType = MutableStateFlow(ENTRY_TYPE.INCOME)
     val selectedEntryType: StateFlow<ENTRY_TYPE> = _selectedEntryType
@@ -70,7 +70,7 @@ class DataEntryViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getAllTypes().collect { types ->
                 _allTypes.value = types
-                _selectedExpenseCategory.value = _allTypes.value.firstOrNull()
+                _selectedCategory.value = _allTypes.value.firstOrNull()
                 Log.d("DataRepository", "All types: $types")
             }
             repository.getAllAccounts().collect { accounts ->
@@ -82,8 +82,8 @@ class DataEntryViewModel @Inject constructor(
     }
 
     // Update selected type
-    fun updateSelectedType(expenseCategory: ExpenseCategory) {
-        _selectedExpenseCategory.value = expenseCategory
+    fun updateSelectedType(category: Category) {
+        _selectedCategory.value = category
     }
 
     // Update selected entry type
@@ -137,7 +137,7 @@ class DataEntryViewModel @Inject constructor(
     fun insertExpense() {
         viewModelScope.launch {
             val expense = Expense(
-                categoryId = _selectedExpenseCategory.value?.id ?: 0,
+                categoryId = _selectedCategory.value?.id ?: 0,
                 accountId = _currentAccount.value?.id ?: 0,
                 amount = _amount.value.toDoubleOrNull() ?: 0.0,
                 description = _description.value,
@@ -155,6 +155,6 @@ class DataEntryViewModel @Inject constructor(
         _price.value = ""
         _amount.value = ""
         _description.value = ""
-        _selectedExpenseCategory.value = null
+        _selectedCategory.value = null
     }
 }

@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,11 +29,7 @@ fun TextToggleSwitch(
     firstOption: String,
     secondOption: String,
     isFirstSelected: Boolean,
-    onToggle: (Boolean) -> Unit,
-    activeBackgroundColor: Color = MaterialTheme.colorScheme.primary,
-    inactiveBackgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
-    activeTextColor: Color = MaterialTheme.colorScheme.onPrimary,
-    inactiveTextColor: Color = MaterialTheme.colorScheme.onSurface
+    onToggle: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -48,43 +41,33 @@ fun TextToggleSwitch(
         FilterChip(
             selected = isFirstSelected,
             onClick = { if (enabled && !isFirstSelected) onToggle(true) },
-            label = { Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = firstOption,
-                textAlign = TextAlign.Center,
-            ) },
+            label = {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = firstOption,
+                    textAlign = TextAlign.Center,
+                )
+            },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxSize()
-                .padding(4.dp),
-            colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = activeBackgroundColor,
-                containerColor = inactiveBackgroundColor,
-                selectedLabelColor = activeTextColor,
-                labelColor = inactiveTextColor
-            )
+                .padding(4.dp)
         )
 
         FilterChip(
             selected = !isFirstSelected,
             onClick = { if (enabled && isFirstSelected) onToggle(false) },
-            label = { Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = secondOption,
-                textAlign = TextAlign.Center
-            ) },
+            label = {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = secondOption,
+                    textAlign = TextAlign.Center
+                )
+            },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxSize()
                 .padding(4.dp),
-            colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = activeBackgroundColor,
-                containerColor = inactiveBackgroundColor,
-                selectedLabelColor = activeTextColor,
-                labelColor = inactiveTextColor
-            )
         )
     }
 }
@@ -108,12 +91,7 @@ fun TrendingSwitchPreview() {
                 firstOption = "Day",
                 secondOption = "Week",
                 isFirstSelected = isFirstOptionSelected,
-                onToggle = { isFirstOptionSelected = it },
-                activeBackgroundColor = MaterialTheme.colorScheme.primary,
-                inactiveBackgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                activeTextColor = MaterialTheme.colorScheme.onPrimary,
-                inactiveTextColor = MaterialTheme.colorScheme.onSurface
-            )
+                onToggle = { isFirstOptionSelected = it })
         }
     }
 }

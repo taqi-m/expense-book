@@ -15,14 +15,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.expense.book.model.data.database.local.entities.ExpenseCategory
+import com.expense.book.model.data.database.local.entities.Category
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TypeSpinner(
-    categories: List<ExpenseCategory>,
-    selectedExpenseCategory: ExpenseCategory?,
-    onTypeSelected: (ExpenseCategory) -> Unit
+    categories: List<Category>,
+    selectedCategory: Category?,
+    onTypeSelected: (Category) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -32,7 +32,7 @@ fun TypeSpinner(
             onExpandedChange = { expanded = it }
         ) {
             TextField(
-                value = selectedExpenseCategory?.categoryName ?: "Select Type",
+                value = selectedCategory?.categoryName ?: "Select Type",
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },

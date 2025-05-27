@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.expense.book.R
+import com.expense.book.view.navigation.screen.dashboard.navScreens.AccountScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.AnalysisScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.CategoriesScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.DashboardMainScreen
@@ -45,14 +46,14 @@ fun DashboardScreen(
     navController: NavHostController = rememberNavController()
 ) {
     // Remember selected item with Savable State to survive process death
-    var selectedItem by rememberSaveable { 
+    var selectedItem by rememberSaveable {
         mutableStateOf(DashboardNavItem.Dashboard)
     }
-    
+
     // Get current route to detect navigation changes
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    
+
     // Update selectedItem based on the current route
     currentRoute?.let { route ->
         val matchingNavItem = DashboardNavItem.entries.find { it.route == route }
@@ -72,18 +73,18 @@ fun DashboardScreen(
                             contentDescription = stringResource(R.string.sync_data)
                         )
                     }
-                    IconButton(onClick = { 
+                    IconButton(onClick = {
                         // Save current tab before navigating
-                        onNavigateToProfile() 
+                        onNavigateToProfile()
                     }) {
                         Icon(
                             Icons.Default.AccountCircle,
                             contentDescription = stringResource(R.string.profile)
                         )
                     }
-                    IconButton(onClick = { 
+                    IconButton(onClick = {
                         // Save current tab before navigating
-                        onNavigateToSettings() 
+                        onNavigateToSettings()
                     }) {
                         Icon(
                             Icons.Default.Settings,
@@ -108,8 +109,8 @@ fun DashboardScreen(
                         if (selectedItem != DashboardNavItem.Dashboard) {
                             selectedItem = DashboardNavItem.Dashboard
                             navController.navigate(DashboardNavItem.Dashboard.route) {
-                                popUpTo(navController.graph.startDestinationId) { 
-                                    saveState = true 
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
                                 }
                                 launchSingleTop = true
                                 restoreState = true
@@ -130,8 +131,30 @@ fun DashboardScreen(
                         if (selectedItem != DashboardNavItem.Analysis) {
                             selectedItem = DashboardNavItem.Analysis
                             navController.navigate(DashboardNavItem.Analysis.route) {
-                                popUpTo(navController.graph.startDestinationId) { 
-                                    saveState = true 
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
+                )
+                NavigationBarItem(
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_account_24),
+                            contentDescription = stringResource(R.string.accounts)
+                        )
+                    },
+                    label = { Text(DashboardNavItem.Account.label) },
+                    selected = selectedItem == DashboardNavItem.Account,
+                    onClick = {
+                        if (selectedItem != DashboardNavItem.Account) {
+                            selectedItem = DashboardNavItem.Account
+                            navController.navigate(DashboardNavItem.Account.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
                                 }
                                 launchSingleTop = true
                                 restoreState = true
@@ -146,14 +169,14 @@ fun DashboardScreen(
                             contentDescription = stringResource(R.string.categories),
                         )
                     },
-                    label = { Text(DashboardNavItem.Categories.label) },
-                    selected = selectedItem == DashboardNavItem.Categories,
+                    label = { Text(DashboardNavItem.Configure.label) },
+                    selected = selectedItem == DashboardNavItem.Configure,
                     onClick = {
-                        if (selectedItem != DashboardNavItem.Categories) {
-                            selectedItem = DashboardNavItem.Categories
-                            navController.navigate(DashboardNavItem.Categories.route) {
-                                popUpTo(navController.graph.startDestinationId) { 
-                                    saveState = true 
+                        if (selectedItem != DashboardNavItem.Configure) {
+                            selectedItem = DashboardNavItem.Configure
+                            navController.navigate(DashboardNavItem.Configure.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
                                 }
                                 launchSingleTop = true
                                 restoreState = true
@@ -164,14 +187,15 @@ fun DashboardScreen(
             }
         },
     ) { paddingValues ->
+        val ANIMATION_DURATION = 400 // Duration for fade in/out animations
         NavHost(
             navController = navController,
             startDestination = DashboardNavItem.Dashboard.route,
             modifier = Modifier.padding(paddingValues),
-            enterTransition = { fadeIn(animationSpec = tween(250)) },
-            exitTransition = { fadeOut(animationSpec = tween(250)) },
-            popEnterTransition = { fadeIn(animationSpec = tween(250)) },
-            popExitTransition = { fadeOut(animationSpec = tween(250)) }
+            enterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
+            exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
+            popExitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) }
         ) {
             composable(DashboardNavItem.Dashboard.route) {
                 DashboardMainScreen(onAddTransaction)
@@ -179,7 +203,10 @@ fun DashboardScreen(
             composable(DashboardNavItem.Analysis.route) {
                 AnalysisScreen()
             }
-            composable(DashboardNavItem.Categories.route) {
+            composable(DashboardNavItem.Account.route) {
+                AccountScreen()
+            }
+            composable(DashboardNavItem.Configure.route) {
                 CategoriesScreen()
             }
         }
