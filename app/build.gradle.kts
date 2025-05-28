@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp") // Apply KSP plugin
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -21,6 +21,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs{
+        create("release") {
+            storeFile = file("testConfig.jks")
+            storePassword = "testConfig"
+            keyAlias = "testConfig"
+            keyPassword = "testConfig"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -28,6 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

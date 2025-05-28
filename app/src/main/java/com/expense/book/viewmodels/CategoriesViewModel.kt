@@ -3,6 +3,7 @@ package com.expense.book.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.expense.book.model.data.ENTRY_TYPE
 import com.expense.book.model.data.database.DataRepository
 import com.expense.book.model.data.database.local.entities.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,11 +17,6 @@ class CategoriesViewModel @Inject constructor(
     private val repository: DataRepository
 ) : ViewModel() {
 
-    enum class ENTRY_TYPE {
-        INCOME,
-        EXPENSE
-    }
-
     private val _allCategories = MutableStateFlow<List<Category>>(emptyList())
 
     private val _incomeCategories = MutableStateFlow<List<Category>>(emptyList())
@@ -30,7 +26,7 @@ class CategoriesViewModel @Inject constructor(
     private val _currentCategories = MutableStateFlow<List<Category>>(emptyList())
     val currentCategories: StateFlow<List<Category>> = _currentCategories
 
-    private val _selectedEntryType = MutableStateFlow(ENTRY_TYPE.INCOME)
+    private val _selectedEntryType = MutableStateFlow(ENTRY_TYPE.EXPENSE)
     val selectedEntryType: StateFlow<ENTRY_TYPE> = _selectedEntryType
 
     init {
@@ -48,14 +44,14 @@ class CategoriesViewModel @Inject constructor(
                 _allCategories.value = types
                 _incomeCategories.value = types.filter { it.categoryType == "Income" }
                 _expenseCategories.value = types.filter { it.categoryType == "Expense" }
-                _currentCategories.value = _incomeCategories.value // Default to income categories
+                updateSelectedEntryType(ENTRY_TYPE.EXPENSE)
                 Log.d("DataRepository", "All types: $types")
             }
         }
     }
 
     // Update selected entry type
-    fun updateSelectedEntryType(entryType: ENTRY_TYPE) {
+    private fun updateSelectedEntryType(entryType: ENTRY_TYPE) {
         _selectedEntryType.value = entryType
         when (entryType) {
             ENTRY_TYPE.INCOME -> {
@@ -65,5 +61,15 @@ class CategoriesViewModel @Inject constructor(
                 _currentCategories.value = _expenseCategories.value
             }
         }
+    }
+
+    fun onEntryTypeSelected(entryType: ENTRY_TYPE) {
+        if (_selectedEntryType.value != entryType) {
+            updateSelectedEntryType(entryType)
+        }
+    }
+
+    fun onAddNewCategoryClicked() {
+            TODO("Not yet implemented")
     }
 }

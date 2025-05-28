@@ -3,6 +3,7 @@ package com.expense.book.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.expense.book.model.data.ENTRY_TYPE
 import com.expense.book.model.data.database.DataRepository
 import com.expense.book.model.data.database.local.entities.Account
 import com.expense.book.model.data.database.local.entities.Category
@@ -18,11 +19,6 @@ import javax.inject.Inject
 class DataEntryViewModel @Inject constructor(
     private val repository: DataRepository
 ) : ViewModel() {
-
-    enum class ENTRY_TYPE {
-        INCOME,
-        EXPENSE
-    }
 
     // StateFlow for all types (for the TypeSpinner)
     private val _allTypes = MutableStateFlow<List<Category>>(emptyList())
@@ -156,5 +152,19 @@ class DataEntryViewModel @Inject constructor(
         _amount.value = ""
         _description.value = ""
         _selectedCategory.value = null
+    }
+
+    fun onEntryTypeSelected(entryType: ENTRY_TYPE) {
+        if (_selectedEntryType.value != entryType) {
+            updateSelectedEntryType(entryType)
+/*            when (entryType) {
+                ENTRY_TYPE.INCOME -> {
+                    _selectedCategory.value = _allTypes.value.firstOrNull { it.categoryType == "Income" }
+                }
+                ENTRY_TYPE.EXPENSE -> {
+                    _selectedCategory.value = _allTypes.value.firstOrNull { it.categoryType == "Expense" }
+                }
+            }*/
+        }
     }
 }

@@ -80,119 +80,116 @@ fun DataEntryScreenContent(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
                 .imePadding()
                 .navigationBarsPadding()
-        ){
+        ) {
             TextToggleSwitch(
-                firstOption = "Income",
-                secondOption = "Expense",
-                isFirstSelected = selectedType == DataEntryViewModel.ENTRY_TYPE.INCOME,
-                onToggle = { isFirstSelected ->
-                    viewModel.updateSelectedEntryType(
-                        if (isFirstSelected) DataEntryViewModel.ENTRY_TYPE.INCOME
-                        else DataEntryViewModel.ENTRY_TYPE.EXPENSE
-                    )
+                modifier = Modifier.padding(bottom = 16.dp),
+                firstOption = "Expense",
+                secondOption = "Income",
+                currentSelection = selectedType,
+                onToggle = { entryType ->
+                    viewModel.onEntryTypeSelected(entryType)
                 }
             )
         }
 
 
-
-/*        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-                .imePadding()
-                .navigationBarsPadding()
-        ) {
-
-            Box(modifier = Modifier.fillMaxWidth()) {
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
+        /*        Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState())
+                        .imePadding()
+                        .navigationBarsPadding()
                 ) {
-                    OutlinedTextField(
-                        value = selectedType?.categoryName ?: "Select Type",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Type") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                            .fillMaxWidth(),
-                    )
 
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        allTypes.forEach { type ->
-                            androidx.compose.material3.DropdownMenuItem(
-                                text = {
-                                    Text(text = type.categoryName)
-                                },
-                                onClick = {
-                                    viewModel.updateSelectedType(type)
-                                    expanded = false
-                                }
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }
+                        ) {
+                            OutlinedTextField(
+                                value = selectedType?.categoryName ?: "Select Type",
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Type") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                modifier = Modifier
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                    .fillMaxWidth(),
                             )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                allTypes.forEach { type ->
+                                    androidx.compose.material3.DropdownMenuItem(
+                                        text = {
+                                            Text(text = type.categoryName)
+                                        },
+                                        onClick = {
+                                            viewModel.updateSelectedType(type)
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            // Income Input Fields
-            if (selectedType?.type == "Income") {
-                OutlinedTextField(
-                    value = buyerName,
-                    onValueChange = { viewModel.updateBuyerName(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Buyer Name") }
-                )
+                    // Income Input Fields
+                    if (selectedType?.type == "Income") {
+                        OutlinedTextField(
+                            value = buyerName,
+                            onValueChange = { viewModel.updateBuyerName(it) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text(text = "Buyer Name") }
+                        )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
-                    value = quantity,
-                    onValueChange = { viewModel.updateQuantity(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Quantity") }
-                )
+                        OutlinedTextField(
+                            value = quantity,
+                            onValueChange = { viewModel.updateQuantity(it) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text(text = "Quantity") }
+                        )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
-                    value = price,
-                    onValueChange = { viewModel.updatePrice(it) },
-                    modifier = Modifier.fillMaxWidth(), label = { Text(text = "Price") }
-                )
+                        OutlinedTextField(
+                            value = price,
+                            onValueChange = { viewModel.updatePrice(it) },
+                            modifier = Modifier.fillMaxWidth(), label = { Text(text = "Price") }
+                        )
 
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            // Expense Input Fields
-            if (selectedType?.type == "Expense") {
-                OutlinedTextField(
-                    value = amount,
-                    onValueChange = { viewModel.updateAmount(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Amount") }
-                )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    // Expense Input Fields
+                    if (selectedType?.type == "Expense") {
+                        OutlinedTextField(
+                            value = amount,
+                            onValueChange = { viewModel.updateAmount(it) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text(text = "Amount") }
+                        )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { viewModel.updateDescription(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "Description") }
-                )
+                        OutlinedTextField(
+                            value = description,
+                            onValueChange = { viewModel.updateDescription(it) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text(text = "Description") }
+                        )
 
-            }
-        }*/
+                    }
+                }*/
     }
 }

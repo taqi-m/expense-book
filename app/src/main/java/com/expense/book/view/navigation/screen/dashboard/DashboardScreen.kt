@@ -1,15 +1,20 @@
 package com.expense.book.view.navigation.screen.dashboard
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -35,6 +40,9 @@ import com.expense.book.view.navigation.screen.dashboard.navScreens.AccountScree
 import com.expense.book.view.navigation.screen.dashboard.navScreens.AnalysisScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.CategoriesScreen
 import com.expense.book.view.navigation.screen.dashboard.navScreens.DashboardMainScreen
+
+
+val ANIMATION_DURATION = 400 // Duration for fade in/out animations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,143 +70,147 @@ fun DashboardScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(selectedItem.label) },
-                actions = {
-                    IconButton(onClick = onSyncData) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = stringResource(R.string.sync_data)
-                        )
-                    }
-                    IconButton(onClick = {
-                        // Save current tab before navigating
-                        onNavigateToProfile()
-                    }) {
-                        Icon(
-                            Icons.Default.AccountCircle,
-                            contentDescription = stringResource(R.string.profile)
-                        )
-                    }
-                    IconButton(onClick = {
-                        // Save current tab before navigating
-                        onNavigateToSettings()
-                    }) {
-                        Icon(
-                            Icons.Default.Settings,
-                            contentDescription = stringResource(R.string.settings)
-                        )
-                    }
-                }
-            )
-        },
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            Icons.Rounded.Home,
-                            contentDescription = stringResource(R.string.dashboard)
-                        )
-                    },
-                    label = { Text(DashboardNavItem.Dashboard.label) },
-                    selected = selectedItem == DashboardNavItem.Dashboard,
-                    onClick = {
-                        if (selectedItem != DashboardNavItem.Dashboard) {
-                            selectedItem = DashboardNavItem.Dashboard
-                            navController.navigate(DashboardNavItem.Dashboard.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    }
-                )
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_analytics_24),
-                            contentDescription = stringResource(R.string.analysis)
-                        )
-                    },
-                    label = { Text(DashboardNavItem.Analysis.label) },
-                    selected = selectedItem == DashboardNavItem.Analysis,
-                    onClick = {
-                        if (selectedItem != DashboardNavItem.Analysis) {
-                            selectedItem = DashboardNavItem.Analysis
-                            navController.navigate(DashboardNavItem.Analysis.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    }
-                )
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_account_24),
-                            contentDescription = stringResource(R.string.accounts)
-                        )
-                    },
-                    label = { Text(DashboardNavItem.Account.label) },
-                    selected = selectedItem == DashboardNavItem.Account,
-                    onClick = {
-                        if (selectedItem != DashboardNavItem.Account) {
-                            selectedItem = DashboardNavItem.Account
-                            navController.navigate(DashboardNavItem.Account.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    }
-                )
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_category_24),
-                            contentDescription = stringResource(R.string.categories),
-                        )
-                    },
-                    label = { Text(DashboardNavItem.Configure.label) },
-                    selected = selectedItem == DashboardNavItem.Configure,
-                    onClick = {
-                        if (selectedItem != DashboardNavItem.Configure) {
-                            selectedItem = DashboardNavItem.Configure
-                            navController.navigate(DashboardNavItem.Configure.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    }
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(selectedItem.label) }, actions = {
+            IconButton(onClick = onSyncData) {
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = stringResource(R.string.sync_data)
                 )
             }
-        },
-    ) { paddingValues ->
-        val ANIMATION_DURATION = 400 // Duration for fade in/out animations
+            IconButton(onClick = {
+                // Save current tab before navigating
+                onNavigateToProfile()
+            }) {
+                Icon(
+                    Icons.Default.AccountCircle,
+                    contentDescription = stringResource(R.string.profile)
+                )
+            }
+            IconButton(onClick = {
+                // Save current tab before navigating
+                onNavigateToSettings()
+            }) {
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.settings)
+                )
+            }
+        })
+    }, bottomBar = {
+        NavigationBar {
+            NavigationBarItem(
+                icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_dashboard_24),
+                    contentDescription = stringResource(R.string.dashboard)
+                )
+            },
+                label = { Text(DashboardNavItem.Dashboard.label) },
+                selected = selectedItem == DashboardNavItem.Dashboard,
+                onClick = {
+                    if (selectedItem != DashboardNavItem.Dashboard) {
+                        selectedItem = DashboardNavItem.Dashboard
+                        navController.navigate(DashboardNavItem.Dashboard.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                })
+            NavigationBarItem(
+                icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_analytics_24),
+                    contentDescription = stringResource(R.string.analysis)
+                )
+            },
+                label = { Text(DashboardNavItem.Analysis.label) },
+                selected = selectedItem == DashboardNavItem.Analysis,
+                onClick = {
+                    if (selectedItem != DashboardNavItem.Analysis) {
+                        selectedItem = DashboardNavItem.Analysis
+                        navController.navigate(DashboardNavItem.Analysis.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                })
+            NavigationBarItem(
+                icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_account_24),
+                    contentDescription = stringResource(R.string.accounts)
+                )
+            },
+                label = { Text(DashboardNavItem.Account.label) },
+                selected = selectedItem == DashboardNavItem.Account,
+                onClick = {
+                    if (selectedItem != DashboardNavItem.Account) {
+                        selectedItem = DashboardNavItem.Account
+                        navController.navigate(DashboardNavItem.Account.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                })
+            NavigationBarItem(
+                icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_category_24),
+                    contentDescription = stringResource(R.string.categories),
+                )
+            },
+                label = { Text(DashboardNavItem.Configure.label) },
+                selected = selectedItem == DashboardNavItem.Configure,
+                onClick = {
+                    if (selectedItem != DashboardNavItem.Configure) {
+                        selectedItem = DashboardNavItem.Configure
+                        navController.navigate(DashboardNavItem.Configure.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                })
+        }
+    }, floatingActionButton = {
+        AnimatedVisibility(
+            visible = selectedItem == DashboardNavItem.Dashboard, enter = scaleIn(
+                animationSpec = tween(ANIMATION_DURATION / 2)
+            ), exit = scaleOut(
+                animationSpec = tween(ANIMATION_DURATION / 2)
+            )
+        ) {
+
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = onAddTransaction,
+            ) {
+                Icon(Icons.Filled.Add, stringResource(R.string.add_transaction))
+            }
+        }
+    }) { paddingValues ->
         NavHost(
+            modifier = Modifier.padding(paddingValues),
             navController = navController,
             startDestination = DashboardNavItem.Dashboard.route,
-            modifier = Modifier.padding(paddingValues),
             enterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
             exitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) },
             popEnterTransition = { fadeIn(animationSpec = tween(ANIMATION_DURATION)) },
-            popExitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) }
-        ) {
+            popExitTransition = { fadeOut(animationSpec = tween(ANIMATION_DURATION)) }) {
             composable(DashboardNavItem.Dashboard.route) {
-                DashboardMainScreen(onAddTransaction)
+                DashboardMainScreen()
             }
             composable(DashboardNavItem.Analysis.route) {
                 AnalysisScreen()

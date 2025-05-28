@@ -56,7 +56,10 @@ class DataRepository @Inject constructor(
 
         try {
             for (category in defaultCategories) {
-                val existingType = categoryDao.getCategoryByNameAndType(category.categoryName, category.categoryType)
+                val existingType = categoryDao.getCategoryByNameAndType(
+                    category.categoryName,
+                    category.categoryType
+                )
                 if (existingType == null) {
                     categoryDao.insert(category)
                 }
@@ -113,7 +116,7 @@ class DataRepository @Inject constructor(
         return expenseDao.getExpensesByCategory(typeId)
     }
 
-    suspend fun getAllAccounts(): Flow<List<Account>> {
+    fun getAllAccounts(): Flow<List<Account>> {
         return accountDao.getAllAccounts()
     }
 }
