@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
@@ -169,12 +168,12 @@ fun DashboardScreen(
                     contentDescription = stringResource(R.string.categories),
                 )
             },
-                label = { Text(DashboardNavItem.Configure.label) },
-                selected = selectedItem == DashboardNavItem.Configure,
+                label = { Text(DashboardNavItem.Categories.label) },
+                selected = selectedItem == DashboardNavItem.Categories,
                 onClick = {
-                    if (selectedItem != DashboardNavItem.Configure) {
-                        selectedItem = DashboardNavItem.Configure
-                        navController.navigate(DashboardNavItem.Configure.route) {
+                    if (selectedItem != DashboardNavItem.Categories) {
+                        selectedItem = DashboardNavItem.Categories
+                        navController.navigate(DashboardNavItem.Categories.route) {
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
@@ -186,15 +185,19 @@ fun DashboardScreen(
         }
     }, floatingActionButton = {
         AnimatedVisibility(
-            visible = selectedItem == DashboardNavItem.Dashboard, enter = scaleIn(
+            visible = when (selectedItem) {
+                DashboardNavItem.Dashboard-> true
+                else -> false
+            },
+            enter = scaleIn(
                 animationSpec = tween(ANIMATION_DURATION / 2)
-            ), exit = scaleOut(
+            ),
+            exit = scaleOut(
                 animationSpec = tween(ANIMATION_DURATION / 2)
             )
         ) {
 
             FloatingActionButton(
-                shape = CircleShape,
                 onClick = onAddTransaction,
             ) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_transaction))
@@ -218,7 +221,7 @@ fun DashboardScreen(
             composable(DashboardNavItem.Account.route) {
                 AccountScreen()
             }
-            composable(DashboardNavItem.Configure.route) {
+            composable(DashboardNavItem.Categories.route) {
                 CategoriesScreen()
             }
         }

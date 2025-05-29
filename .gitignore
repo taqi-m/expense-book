@@ -14,5 +14,5 @@ app/build
 .externalNativeBuild
 .cxx
 local.properties
-testConfig.jks
+*.jks
 

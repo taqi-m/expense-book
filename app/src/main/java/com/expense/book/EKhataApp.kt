@@ -26,6 +26,7 @@ fun ExpenseBookApp() {
 fun AppNavHost(navController: NavHostController) {
     /*TODO Replace startDestination with Screen.Login.route*/
 
+
     NavHost(
         navController,
         startDestination = Screen.Dashboard.route,
@@ -43,22 +44,22 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable(Screen.Dashboard.route) {
             DashboardScreen(
-                onNavigateToProfile = { 
+                onNavigateToProfile = {
                     // Save the dashboard state in the navigation backstack
                     navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
-                    navController.navigate(Screen.Profile.route) 
+                    navController.navigate(Screen.Profile.route)
                 },
-                onAddTransaction = { 
+                onAddTransaction = {
                     navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
-                    navController.navigate(Screen.DataEntry.route) 
+                    navController.navigate(Screen.DataEntry.route)
                 },
-                onSyncData = { 
+                onSyncData = {
                     navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
-                    navController.navigate(Screen.Sync.route) 
+                    navController.navigate(Screen.Sync.route)
                 },
-                onNavigateToSettings = { 
+                onNavigateToSettings = {
                     navController.currentBackStackEntry?.savedStateHandle?.set("returnToDashboard", false)
-                    navController.navigate(Screen.Settings.route) 
+                    navController.navigate(Screen.Settings.route)
                 }
             )
         }

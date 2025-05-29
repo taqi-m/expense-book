@@ -54,12 +54,13 @@ fun CategoriesScreen(
             CategoryItem(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-//                        color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(4.dp)
-                    ),
+//                    .border(
+//                        width = 1.dp,
+//                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+////                        color = MaterialTheme.colorScheme.outline,
+//                        shape = RoundedCornerShape(4.dp)
+//                    ),
+                        ,
                 categoryName = category.categoryName
             ) {
 
