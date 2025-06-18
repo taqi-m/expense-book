@@ -26,13 +26,20 @@ class CategoriesViewModel @Inject constructor(
     private val _currentCategories = MutableStateFlow<List<Category>>(emptyList())
     val currentCategories: StateFlow<List<Category>> = _currentCategories
 
+    private val _selectedCategory = MutableStateFlow<Category?>(null)
+    val selectedCategory: StateFlow<Category?> = _selectedCategory
+
+
     private val _selectedEntryType = MutableStateFlow(ENTRY_TYPE.EXPENSE)
     val selectedEntryType: StateFlow<ENTRY_TYPE> = _selectedEntryType
 
+    val isNewCategoryDialogVisible = MutableStateFlow(false)
+    val isEditCategoryDialogVisible = MutableStateFlow(false)
+
     init {
-        viewModelScope.launch {
+/*        viewModelScope.launch {
             repository.addDefaultTypesIfNotExist()
-        }
+        }*/
         // Load all types when the ViewModel is created
         loadAllCategories()
     }
@@ -70,6 +77,19 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun onAddNewCategoryClicked() {
-            TODO("Not yet implemented")
+        isNewCategoryDialogVisible.value = !isNewCategoryDialogVisible.value
+    }
+
+    fun addNewCategory(name: String, description: String) {
+//        TODO: Add category to database
+    }
+
+    fun onEditCategoryClicked(category: Category?) {
+        _selectedCategory.value = category
+        isEditCategoryDialogVisible.value = !isEditCategoryDialogVisible.value
+    }
+
+    fun updateCategory(category: Category){
+
     }
 }

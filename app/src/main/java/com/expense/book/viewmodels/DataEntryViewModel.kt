@@ -54,9 +54,9 @@ class DataEntryViewModel @Inject constructor(
     val description: StateFlow<String> = _description
 
     init {
-        viewModelScope.launch {
+/*        viewModelScope.launch {
             repository.addDefaultTypesIfNotExist()
-        }
+        }*/
         // Load all types when the ViewModel is created
         loadAllTypes()
     }

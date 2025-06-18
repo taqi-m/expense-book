@@ -18,8 +18,9 @@ import androidx.compose.ui.unit.dp
 import com.expense.book.R
 
 @Composable
-fun ButtonNewCategory(
+fun AddNewButton(
     modifier: Modifier = Modifier,
+    text: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -39,7 +40,7 @@ fun ButtonNewCategory(
             tint = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "Add Category",
+            text = text,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.primary
         )

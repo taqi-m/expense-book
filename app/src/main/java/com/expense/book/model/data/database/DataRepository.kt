@@ -76,6 +76,7 @@ class DataRepository @Inject constructor(
         } finally {
             // Mark default types as added
             appPreferences.setDefaultTypesAdded()
+            Log.d("DataRepository", "Default types added")
         }
 
 

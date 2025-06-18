@@ -39,6 +39,9 @@ class DashboardViewModel @Inject constructor(
     val totalExpense: StateFlow<Double> = _totalExpense
 
     init {
+        viewModelScope.launch {
+            repository.addDefaultTypesIfNotExist()
+        }
         // Load initial data from the database
         loadRecentIncome()
         loadRecentExpenses()

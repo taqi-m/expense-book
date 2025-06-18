@@ -16,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.expense.book.view.componenets.ButtonNewCategory
+import com.expense.book.view.componenets.AddCategoryDialog
+import com.expense.book.view.componenets.AddNewButton
 import com.expense.book.view.componenets.CategoryItem
+import com.expense.book.view.componenets.EditCategoryDialog
 import com.expense.book.view.componenets.TextToggleSwitch
 import com.expense.book.viewmodels.CategoriesViewModel
 
@@ -28,6 +30,9 @@ fun CategoriesScreen(
 ) {
     val selectedType by viewModel.selectedEntryType.collectAsState()
     val currentCategories by viewModel.currentCategories.collectAsState()
+    val isNewCategoryDialogVisible by viewModel.isNewCategoryDialogVisible.collectAsState()
+    val isEditCategoryDialogVisible by viewModel.isEditCategoryDialogVisible.collectAsState()
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
 
 
     LazyColumn(
@@ -49,26 +54,27 @@ fun CategoriesScreen(
 
         items(
             items = currentCategories,
-            key = { it.categoryName }
+            key = { it.id }
         ) { category ->
             CategoryItem(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
-//                    .border(
-//                        width = 1.dp,
-//                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-////                        color = MaterialTheme.colorScheme.outline,
-//                        shape = RoundedCornerShape(4.dp)
-//                    ),
-                        ,
-                categoryName = category.categoryName
-            ) {
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+//                        color = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(4.dp)
+                    ),
+                categoryName = category.categoryName,
+                onEditClick = {viewModel.onEditCategoryClicked(category)},
+                onLongClick = {
 
-            }
+                }
+            )
         }
 
         item {
-            ButtonNewCategory(
+            AddNewButton(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .fillMaxWidth()
@@ -78,11 +84,37 @@ fun CategoriesScreen(
                         color = MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(4.dp)
                     ),
+                text = "Add New Category",
                 onClick = {
-//                    viewModel.onAddNewCategoryClicked()
+                    viewModel.onAddNewCategoryClicked()
                 }
             )
         }
+    }
+
+    if (isNewCategoryDialogVisible) {
+        AddCategoryDialog(
+                onAddNewCategory = { categoryName, categoryDescription ->
+                    viewModel.addNewCategory(categoryName, categoryDescription)
+                },
+        onDismiss = {
+            viewModel.onAddNewCategoryClicked()
+        }
+        )
+    }
+
+    if (isEditCategoryDialogVisible && selectedCategory != null){
+        EditCategoryDialog(
+            category = selectedCategory!!,
+            onEditCategory = { category ->
+                viewModel.updateCategory(category)
+
+            },
+            onDeleteCategory = {},
+            onDismiss = {
+                viewModel.onEditCategoryClicked(null)
+            }
+        )
     }
 }
 
